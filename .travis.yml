@@ -5,5 +5,13 @@ before_install:
   - docker pull ubuntu:trusty
 
 script:
-  - docker build -t bitbayofficial/builder-linux64 .
+  - docker build -t bitbayofficial/builder-linux64:latest .
+
+deploy:
+  provider: script
+  script: 
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+    - docker push bitbayofficial/builder-linux64:latest
+  on:
+    branch: master
 
