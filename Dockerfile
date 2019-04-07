@@ -33,7 +33,7 @@ RUN apt-get install -y qt59-meta-minimal
 RUN apt-get install -y qt59tools
 
 RUN apt-get install -y curl
-RUN apt-get install -y libfuse-dev
+RUN apt-get install -y fuse
 RUN curl -fsSL -o /usr/bin/linuxdeployqt https://github.com/bitbaymarket/bitbay-prebuilt-libs1/releases/download/base1/linuxdeployqt-continuous-x86_64.AppImage
 RUN chmod 755 /usr/bin/linuxdeployqt
 
