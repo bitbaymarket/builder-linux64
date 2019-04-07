@@ -14,6 +14,7 @@ RUN apt-get install -y libboost-program-options-dev
 RUN apt-get install -y libboost-thread-dev
 RUN apt-get install -y libssl-dev
 RUN apt-get install -y libminiupnpc-dev
+RUN apt-get install -y libgl1-mesa-dev
 
 RUN ln -s /usr/bin/g++-7 /usr/bin/g++
 RUN ln -s /usr/bin/gcc-7 /usr/bin/gcc
