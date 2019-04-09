@@ -34,6 +34,15 @@ RUN apt-get install -y qt59tools
 
 RUN apt-get install -y curl
 RUN apt-get install -y fuse
-RUN curl -fsSL -o /usr/bin/linuxdeployqt https://github.com/bitbaymarket/bitbay-prebuilt-libs1/releases/download/base1/linuxdeployqt-continuous-x86_64.AppImage
+RUN chmod 644 /etc/fuse.conf
+
+ENV BASE1 https://github.com/bitbaymarket/bitbay-prebuilt-libs1/releases/download/base1
+RUN curl -fsSL -o /usr/bin/linuxdeployqt $BASE1/linuxdeployqt-continuous-x86_64.AppImage
 RUN chmod 755 /usr/bin/linuxdeployqt
 
+ENV LD_LIBRARY_PATH "/opt/qt59/lib/x86_64-linux-gnu:/opt/qt59/lib"
+ENV PATH "/opt/qt59/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+ENV PKG_CONFIG_PATH "/opt/qt59/lib/pkgconfig"
+ENV QTDIR "/opt/qt59"
+
+RUN qmake -v
