@@ -46,7 +46,7 @@ _options="--user-config=\"$builddir/user-config.jam\"
 	release
 	debug-symbols=off
 	threading=single,multi
-	runtime-link=static
+	runtime-link=shared
 	link=static
 	cflags=-fno-strict-aliasing
 	-sPYTHON_ROOT=/usr

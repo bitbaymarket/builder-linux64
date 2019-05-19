@@ -29,7 +29,6 @@ COPY --from=berkeleydb /opt /opt
 RUN apk add --no-cache tree
 RUN tree /opt
 
-#RUN xxx
 WORKDIR /
 RUN apk add --no-cache abuild
 RUN apk --no-cache add autoconf
@@ -99,8 +98,81 @@ RUN tree /home/packager
 RUN sudo mkdir /opt/qt
 RUN sudo mv /home/packager/packages/work/x86_64/* /opt/qt/
 
-FROM alpine:3.8 as boost-dev
+FROM alpine:3.8 as qt-tools
+
 COPY --from=qt-dev /opt /opt
+
+RUN apk add --no-cache tree
+RUN tree /opt
+
+RUN apk add --allow-untrusted /opt/qt/qt5-qtbase-dev-5.12.1-r2.apk
+RUN apk --no-cache add gcc
+RUN apk --no-cache add g++
+RUN apk --no-cache add make
+RUN apk --no-cache add libxrender
+
+RUN apk add --no-cache at-spi2-atk-dev
+RUN apk add --no-cache bison
+RUN apk add --no-cache cups-dev
+RUN apk add --no-cache eudev-dev
+RUN apk add --no-cache flex
+RUN apk add --no-cache freetds-dev
+RUN apk add --no-cache gawk
+RUN apk add --no-cache gperf
+RUN apk add --no-cache gtk+2.0-dev
+RUN apk add --no-cache icu-dev
+RUN apk add --no-cache libinput-dev
+RUN apk add --no-cache libjpeg-turbo-dev
+RUN apk add --no-cache libxkbcommon-dev
+RUN apk add --no-cache libxrandr-dev
+RUN apk add --no-cache libxrender-dev
+RUN apk add --no-cache libxslt-dev
+RUN apk add --no-cache libxv-dev
+RUN apk add --no-cache mtdev-dev
+RUN apk add --no-cache pcre2-dev
+RUN apk add --no-cache libc-dev
+RUN apk add --no-cache libgcc
+RUN apk add --no-cache musl-dev
+
+RUN apk add --no-cache abuild
+RUN apk --no-cache add autoconf
+RUN apk --no-cache add automake
+RUN apk --no-cache add alpine-sdk
+
+RUN cp /usr/lib/libxcb-static.a /libxcb-static.a
+RUN cp /usr/lib/libqtlibpng.a /libqtlibpng.a
+RUN cp /usr/lib/libqtpcre2.a /libqtpcre2.a 
+RUN cp /usr/lib/libqtfreetype.a /libqtfreetype.a 
+RUN cp /usr/lib/libqtharfbuzz.a /libqtharfbuzz.a 
+
+WORKDIR /
+
+RUN     mkdir -p /var/cache/distfiles && \
+        adduser -D packager && \
+        addgroup packager abuild && \
+        chgrp abuild /var/cache/distfiles && \
+        chmod g+w /var/cache/distfiles && \
+        echo "packager    ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+ADD     setup.sh /home/packager/bin/setup.sh
+
+WORKDIR /work
+
+USER packager
+RUN abuild-keygen -a
+
+COPY qt5-qttools /work/qt5-qttools
+RUN sudo chown -R packager /work 
+WORKDIR /work/qt5-qttools
+
+RUN abuild -r
+
+RUN tree /home/packager
+RUN sudo mkdir /opt/qttools
+RUN sudo mv /home/packager/packages/work/x86_64/* /opt/qttools/
+
+FROM alpine:3.8 as boost-dev
+COPY --from=qt-tools /opt /opt
 
 RUN apk --no-cache add tree
 RUN tree /opt/
@@ -156,6 +228,8 @@ RUN tree /opt
 
 RUN apk add --allow-untrusted /opt/boost/boost-*.apk
 RUN apk add --allow-untrusted /opt/qt/qt5-qtbase-dev-5.12.1-r2.apk
+RUN apk add --allow-untrusted /opt/qttools/qt5-qttools-5.12.1-r0.apk
+RUN apk add --allow-untrusted /opt/qttools/qt5-qttools-dev-5.12.1-r0.apk
 RUN apk --no-cache add gcc
 RUN apk --no-cache add g++
 RUN apk --no-cache add make

@@ -14,5 +14,4 @@ INCLUDEPATH += $$PWD
 RESOURCES += fonts.qrc
 RESOURCES += qtapp.qrc
 
-#LIBS += -Wl,-Bstatic
 LIBS += -static
