@@ -294,3 +294,5 @@ RUN apk add --no-cache curl
 RUN apk add --no-cache tar
 RUN apk add --no-cache vim
 RUN apk add --no-cache dev86
+RUN apk add --no-cache libunwind-dev 
+
