@@ -2,10 +2,10 @@ services:
   - docker
 
 before_install:
-  - docker pull ubuntu:trusty
+  - docker pull alpine:3.8
 
 script:
-  - docker build -t bitbayofficial/builder-linux64:alpine . -f trusty.dockerfile
+  - docker build -t bitbayofficial/builder-linux64:alpine . -f alpine.dockerfile
 
 deploy:
   provider: script
