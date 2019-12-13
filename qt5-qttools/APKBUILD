@@ -25,12 +25,22 @@ builddir="$srcdir"/$_pkgname-${_V%-*}
 
 build() {
 	cd "$builddir"
-	qmake-qt5 && make -j32
+	qmake-qt5 && cd src/linguist/lrelease && ls -al && qmake-qt5 && make -j32
+	cd "$builddir"
+	qmake-qt5 && cd src/linguist/lupdate  && ls -al && qmake-qt5 && make -j32
+	cd "$builddir"
+	qmake-qt5 && cd src/linguist/lconvert && ls -al && qmake-qt5 && make -j32
+	cd "$builddir"
 }
 
 package() {
 	cd "$builddir"
-	make install INSTALL_ROOT="$pkgdir"
+	cd src/linguist/lrelease && make install INSTALL_ROOT="$pkgdir"
+	cd "$builddir"
+	cd src/linguist/lupdate  && make install INSTALL_ROOT="$pkgdir"
+	cd "$builddir"
+	cd src/linguist/lconvert && make install INSTALL_ROOT="$pkgdir"
+	cd "$builddir"
 
 	# -qt5 symlinks
 	mkdir -p "$pkgdir"/usr/bin/
@@ -50,8 +60,7 @@ _mv_files() {
 dev() {
 	default_dev
 	cd "$pkgdir"
-	for i in lconvert linguist lrelease lupdate pixeltool \
-		qhelpgenerator; do
+	for i in lconvert lrelease lupdate; do
 
 		_mv_files $_qt5_prefix/bin/$i usr/bin/$i-qt5
 	done
