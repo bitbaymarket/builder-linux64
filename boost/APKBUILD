@@ -58,6 +58,7 @@ _options="--user-config=\"$builddir/user-config.jam\"
 	--with-system
 	--with-thread
 	--with-chrono
+	--with-test
 	-q
 	-j32
 	"
