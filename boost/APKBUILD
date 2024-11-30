@@ -18,6 +18,7 @@ _libs="filesystem
 	program_options
 	system
 	thread
+	regex
 	"
 #for _lib in $_libs; do
 #	subpackages="$subpackages $pkgname-$_lib:_boostlib"
@@ -58,6 +59,7 @@ _options="--user-config=\"$builddir/user-config.jam\"
 	--with-system
 	--with-thread
 	--with-chrono
+	--with-regex
 	--with-test
 	-q
 	-j32
