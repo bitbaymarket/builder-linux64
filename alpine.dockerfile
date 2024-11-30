@@ -219,6 +219,25 @@ RUN tree /home/packager
 RUN sudo mkdir /opt/boost
 RUN sudo mv /home/packager/packages/work/x86_64/* /opt/boost/
 
+#curl
+
+RUN sudo rm -rf /home/packager/packages/work/x86_64
+
+WORKDIR /work
+
+USER packager
+RUN abuild-keygen -a
+
+COPY curl /work/curl
+RUN sudo chown -R packager /work 
+WORKDIR /work/curl
+
+RUN abuild -r || ls -al /work/curl/pkg/curl/usr/lib/
+
+RUN tree /home/packager
+RUN sudo mkdir /opt/curl
+RUN sudo mv /home/packager/packages/work/x86_64/* /opt/curl/
+
 FROM alpine:3.8 as bitbay-dev
 
 COPY --from=boost-dev /opt /opt
@@ -227,6 +246,7 @@ RUN apk add --no-cache tree
 RUN tree /opt
 
 RUN apk add --allow-untrusted /opt/boost/boost-*.apk
+RUN apk add --allow-untrusted /opt/curl/curl-*.apk
 RUN apk add --allow-untrusted /opt/qt/qt5-qtbase-dev-5.12.1-r2.apk
 RUN apk add --allow-untrusted /opt/qttools/qt5-qttools-5.12.1-r0.apk
 RUN apk add --allow-untrusted /opt/qttools/qt5-qttools-dev-5.12.1-r0.apk
@@ -290,9 +310,8 @@ RUN cp -avR /opt/db-4.8.30.NC/lib/* /usr/lib/
 #RUN rm -rf /usr/lib/libminiupnpc.so*
 #RUN rm -rf /usr/lib/libboost*.so*
 
-RUN apk add --no-cache curl
+#RUN apk add --no-cache curl
 RUN apk add --no-cache tar
 RUN apk add --no-cache vim
 RUN apk add --no-cache dev86
 RUN apk add --no-cache libunwind-dev 
-

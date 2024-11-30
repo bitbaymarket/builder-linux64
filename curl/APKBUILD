@@ -15,7 +15,6 @@ checkdepends="python2"
 makedepends="$depends_dev autoconf automake groff libtool perl"
 subpackages="$pkgname-dbg $pkgname-doc $pkgname-dev libcurl"
 source="https://curl.haxx.se/download/$pkgname-$pkgver.tar.xz
-	0001-openssl-fix-build-with-libressl-2.7.patch
 	use-OPENSSL_config.patch
 	CVE-2018-16839.patch
 	CVE-2018-16840.patch
@@ -130,7 +129,6 @@ libcurl() {
 }
 
 sha512sums="e6f82a7292c70841162480c8880d25046bcfa64058f4ff76f7d398c85da569af1c244442c9c58a3478d59264365ff8e39eed2fb564cb137118588f7862e64e9a  curl-7.61.1.tar.xz
-16c9b54cfa996a61278c0a899840be9e42477661ff6d69d6a772671aeb50a597e9de9328ba3c0a5cb71fa073e4a58db5f3962aab7636a9f1327cad343ff05ae9  0001-openssl-fix-build-with-libressl-2.7.patch
 708527e73f9512c50e2250ca26786ba8994dc05fd2e362c1feb274e251219fb4bfc97e7e7722aa12424ccaf4c511d90d8820561c82a24f103b9ee2b743f4be28  use-OPENSSL_config.patch
 4a28e4dcf36bf8e2fc5658d7fcee311d29452f4bed1479bad02772a8b7969c9dc653480b85715a5fe2bd2c2a8ae59e94fe72ffc6d0fe765131010d8f64bdfaee  CVE-2018-16839.patch
 c1a684f17267b08f77625064ac62e4f06989c552d6d501565f8bebf31d3a96a613f0683376ec7cc16f6489554dcca4dcb1d428461159b82434c076df44ef5b38  CVE-2018-16840.patch
