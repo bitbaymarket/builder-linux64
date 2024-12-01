@@ -231,12 +231,19 @@ RUN abuild-keygen -a
 COPY curl /work/curl
 RUN sudo chown -R packager /work 
 WORKDIR /work/curl
-
 RUN abuild -r || ls -al /work/curl/pkg/curl/usr/lib/
 
 RUN tree /home/packager
 RUN sudo mkdir /opt/curl
 RUN sudo mv /home/packager/packages/work/x86_64/* /opt/curl/
+
+COPY nghttp /work/nghttp
+RUN sudo chown -R packager /work 
+WORKDIR /work/nghttp
+RUN abuild -r || ls -al /work/nghttp/pkg/nghttp/usr/lib/
+
+RUN sudo mkdir /opt/nghttp
+RUN sudo mv /home/packager/packages/work/x86_64/nghttp* /opt/nghttp/
 
 FROM alpine:3.8 as bitbay-dev
 
@@ -246,6 +253,7 @@ RUN apk add --no-cache tree
 RUN tree /opt
 
 RUN apk add --allow-untrusted /opt/boost/boost-*.apk
+RUN apk add --allow-untrusted /opt/nghttp/nghttp*.apk
 RUN apk add --allow-untrusted /opt/curl/curl-*.apk
 RUN apk add --allow-untrusted /opt/qt/qt5-qtbase-dev-5.12.1-r2.apk
 RUN apk add --allow-untrusted /opt/qttools/qt5-qttools-5.12.1-r0.apk

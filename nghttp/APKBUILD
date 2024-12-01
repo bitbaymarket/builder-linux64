@@ -1,0 +1,60 @@
+# Contributor: Natanael Copa <ncopa@alpinelinux.org>
+# Maintainer: Francesco Colista <fcolista@alpinelinux.org>
+pkgname=nghttp2
+pkgver=1.39.2
+pkgrel=0
+pkgdesc="Experimental HTTP/2 client, server and proxy"
+url="https://nghttp2.org"
+arch="all"
+license="MIT"
+makedepends="libev-dev openssl-dev zlib-dev c-ares-dev autoconf automake libtool"
+subpackages="$pkgname-dev $pkgname-doc $pkgname-libs"
+source="https://github.com/tatsuhiro-t/$pkgname/releases/download/v$pkgver/nghttp2-$pkgver.tar.xz"
+builddir="$srcdir"/$pkgname-$pkgver
+
+# secfixes:
+#   1.39.2-r0:
+#     - CVE-2019-9511
+#     - CVE-2019-9513
+
+check() {
+	cd "$builddir"
+	make check
+}
+
+build() {
+	if [ -z "$BOOTSTRAP" ]; then
+		# fat to keep static non-lto too for non-gcc
+		# -20% size
+		export CFLAGS="$CFLAGS -ffat-lto-objects -flto=auto"
+		export CXXFLAGS="$CXXFLAGS -ffat-lto-objects -flto=auto"
+	fi
+	cd "$builddir"
+	autoreconf -vif
+	./configure \
+		--build=$CBUILD \
+		--host=$CHOST \
+		--prefix=/usr \
+		--sysconfdir=/etc \
+		--mandir=/usr/share/man \
+		--infodir=/usr/share/info \
+		--localstatedir=/var \
+		--libdir=/usr/lib \
+		--enable-static \
+		--without-libxml2 \
+		--without-spdylay \
+		--without-neverbleed \
+		--without-jemalloc \
+		--disable-python-bindings \
+		--enable-app
+	make
+}
+
+package() {
+	cd "$builddir"
+	make DESTDIR="$pkgdir" LIBDIR=$pkgdir/usr/lib install
+	tree /work/nghttp/pkg/nghttp2/
+	cd /work/nghttp/pkg/nghttp2/usr/lib/ && libtool --finish /usr/lib
+}
+
+sha512sums="d8c971543e3e87736dfafebca55e9ecd0644e304c9731edaccba34170205824476595861a439077289b438ad489dd6008dedf2c6b2c111920300329be1b1bf34  nghttp2-1.39.2.tar.xz"
